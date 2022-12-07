@@ -1,12 +1,16 @@
+import { useContext } from "react";
 import { View, ScrollView, Pressable, Text, StyleSheet } from "react-native";
+import { TaskContext } from "../context/TaskContext";
 
-const TaskList = ({ tasks, finishTask }) => {
+const TaskList = () => {
+  const taskContext = useContext(TaskContext);
+
   return (
     <View style={styles.taskList}>
       <ScrollView>
-        {tasks.map(({ id, description, done }) => {
+        {taskContext.tasks.map(({ id, description, done }) => {
           return (
-            <Pressable key={id} onPress={() => finishTask(id)}>
+            <Pressable key={id} onPress={() => taskContext.finishTask(id)}>
               <View style={styles.taskListItem(done)}>
                 <Text style={styles.taskListItemText(done)}>{description}</Text>
               </View>

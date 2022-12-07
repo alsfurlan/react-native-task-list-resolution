@@ -1,12 +1,15 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { View, TextInput, StyleSheet } from "react-native";
+import { TaskContext } from "../context/TaskContext";
 import CustomButton from "./CustomButton";
 
-const TaskRegister = ({ addTask }) => {
+const TaskRegister = () => {
+  const taskContext = useContext(TaskContext);
+
   const [task, setTask] = useState("");
 
   const addTaskHander = () => {
-    addTask(task);
+    taskContext.addTask(task);
     setTask("");
   };
 
