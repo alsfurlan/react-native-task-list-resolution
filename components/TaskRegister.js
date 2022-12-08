@@ -1,6 +1,8 @@
 import { useState, useContext } from "react";
 import { View, TextInput, StyleSheet } from "react-native";
+import { addNewTask } from "../api/TaskApi";
 import { TaskContext } from "../context/TaskContext";
+import { Task } from "../models/Task";
 import CustomButton from "./CustomButton";
 
 const TaskRegister = () => {
@@ -8,8 +10,10 @@ const TaskRegister = () => {
 
   const [task, setTask] = useState("");
 
-  const addTaskHander = () => {
-    taskContext.addTask(task);
+  const addTaskHander = async () => {
+    let newTask = new Task(task);
+    newTask = await addNewTask(newTask);
+    taskContext.addTask(newTask);
     setTask("");
   };
 

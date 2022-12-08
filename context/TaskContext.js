@@ -1,33 +1,33 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 
 export const TaskContext = createContext({
-  tasks: [],
-  addTask: (description) => {},
-  finishTask: (id) => {},
+  taskList: [],
+  addTask: (task) => {},
+  updateTask: (task) => {},
+  setTasks: (tasks) => {},
 });
 
 export const TaskContextProvider = ({ children }) => {
-  const [tasks, setTasks] = useState([]);
+  const [taskList, setTaskList] = useState([]);
 
-  const addTask = (description) => {
-    const newTask = {
-      id: Date.now(),
-      description,
-      done: false,
-    };
-    setTasks((currentTasks) => [...currentTasks, newTask]);
+  const addTask = async (task) => {
+    setTaskList((currentTaskList) => [...currentTaskList, task]);
   };
 
-  const finishTask = (id) => {
-    setTasks((currentTasks) => {
-      const index = currentTasks.findIndex((task) => task.id === id);
-      currentTasks[index].done = !currentTasks[index].done;
-      return [...currentTasks];
+  const updateTask = (task) => {
+    setTaskList((currentTaskList) => {
+      const index = currentTaskList.findIndex((t) => t.id === task.id);
+      currentTaskList[index] = task;
+      return [...currentTaskList];
     });
   };
 
+  const setTasks = (tasks) => {
+    setTaskList(tasks);
+  };
+
   return (
-    <TaskContext.Provider value={{ tasks, addTask, finishTask }}>
+    <TaskContext.Provider value={{ taskList, addTask, updateTask, setTasks }}>
       {children}
     </TaskContext.Provider>
   );

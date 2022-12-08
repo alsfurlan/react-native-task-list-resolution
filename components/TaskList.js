@@ -1,18 +1,36 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { View, ScrollView, Pressable, Text, StyleSheet } from "react-native";
+import { findAllTasks, updateTask } from "../api/TaskApi";
 import { TaskContext } from "../context/TaskContext";
 
 const TaskList = () => {
   const taskContext = useContext(TaskContext);
 
+  useEffect(() => {
+    loadTasks();
+  }, []);
+
+  const loadTasks = async () => {
+    const tasks = await findAllTasks();
+    taskContext.setTasks(tasks);
+  };
+
+  const toggleTaskStatus = async (task) => {
+    task.done = !task.done;
+    await updateTask(task);
+    taskContext.updateTask(task);
+  };
+
   return (
     <View style={styles.taskList}>
       <ScrollView>
-        {taskContext.tasks.map(({ id, description, done }) => {
+        {taskContext.taskList.map((task) => {
           return (
-            <Pressable key={id} onPress={() => taskContext.finishTask(id)}>
-              <View style={styles.taskListItem(done)}>
-                <Text style={styles.taskListItemText(done)}>{description}</Text>
+            <Pressable key={task.id} onPress={() => toggleTaskStatus(task)}>
+              <View style={styles.taskListItem(task.done)}>
+                <Text style={styles.taskListItemText(task.done)}>
+                  {task.id} - {task.description}
+                </Text>
               </View>
             </Pressable>
           );
