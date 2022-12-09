@@ -1,5 +1,12 @@
 import { useContext, useEffect } from "react";
-import { View, ScrollView, Pressable, Text, StyleSheet } from "react-native";
+import {
+  View,
+  ScrollView,
+  Pressable,
+  Text,
+  StyleSheet,
+  Alert,
+} from "react-native";
 import { findAllTasks, updateTask } from "../api/TaskApi";
 import { TaskContext } from "../context/TaskContext";
 
@@ -11,14 +18,22 @@ const TaskList = () => {
   }, []);
 
   const loadTasks = async () => {
-    const tasks = await findAllTasks();
-    taskContext.setTasks(tasks);
+    try {
+      const tasks = await findAllTasks();
+      taskContext.setTasks(tasks);
+    } catch (error) {
+      Alert.alert("Erro", "Erro ao carregar lista de tarefas");
+    }
   };
 
   const toggleTaskStatus = async (task) => {
     task.done = !task.done;
-    await updateTask(task);
-    taskContext.updateTask(task);
+    try {
+      await updateTask(task);
+      taskContext.updateTask(task);
+    } catch (error) {
+      Alert.alert("Erro", `Erro ao atualizar a tarefa ${task.id}!`);
+    }
   };
 
   return (

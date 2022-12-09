@@ -1,5 +1,5 @@
 import { useState, useContext } from "react";
-import { View, TextInput, StyleSheet } from "react-native";
+import { View, TextInput, StyleSheet, Alert } from "react-native";
 import { addNewTask } from "../api/TaskApi";
 import { TaskContext } from "../context/TaskContext";
 import { Task } from "../models/Task";
@@ -12,9 +12,13 @@ const TaskRegister = () => {
 
   const addTaskHander = async () => {
     let newTask = new Task(task);
-    newTask = await addNewTask(newTask);
-    taskContext.addTask(newTask);
-    setTask("");
+    try {
+      newTask = await addNewTask(newTask);
+      taskContext.addTask(newTask);
+      setTask("");
+    } catch (error) {
+      Alert.alert("Erro", "Erro ao adicionar a tarefa");
+    }
   };
 
   return (
